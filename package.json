@@ -2,7 +2,7 @@
   "name": "diffium",
   "displayName": "Diffium — Modern Diff Viewer",
   "description": "A beautiful, modern two-file diff viewer with GitHub Copilot integration: AI explanations and reviews of your changes.",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "publisher": "sitharaj",
   "license": "MIT",
   "repository": {

@@ -2,12 +2,13 @@
 
 All notable changes to **Diffium** are documented here.
 
-## [0.1.0] — 2026-07-03
+## [1.0.0] — 2026-07-03
 
-Initial release. 🎉
+Initial public release. 🎉
 
 ### Viewer
 - Split and Inline diff modes with instant toggle
+- Split panes always fit the viewport; long lines pan horizontally **in sync** via a shared bottom scrollbar (trackpad / `Shift`+wheel supported)
 - Word-level (intra-line) change highlighting
 - Syntax highlighting for 25+ languages, themed to VS Code light/dark/high-contrast
 - Foldable unchanged regions (`⋯ N unchanged lines`), Expand/Fold all
