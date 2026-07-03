@@ -359,19 +359,28 @@ body {
   flex: 1;
   min-width: 0;
   display: flex;
+  flex-direction: column;
   position: relative;
+  min-height: 0;
+}
+
+.view-row {
+  display: flex;
+  flex: 1;
   min-height: 0;
 }
 
 .scroller {
   flex: 1;
   min-width: 0;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   position: relative;
 }
 
 .spacer {
   position: relative;
+  width: 100%;
 }
 
 .rows-layer {
@@ -379,11 +388,25 @@ body {
   inset: 0;
 }
 
+/* shared horizontal scrollbar for long lines (both panes pan together) */
+.hbar {
+  flex: none;
+  height: 14px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-top: 1px solid var(--dp-border);
+}
+
+.hbar-spacer {
+  height: 1px;
+}
+
 /* ------------------------------------------------------------------ rows */
 
 .vrow {
   position: absolute;
   left: 0;
+  right: 0;
   height: var(--row-h, 20px);
   font-family: var(--vscode-editor-font-family, 'Consolas', monospace);
   font-size: var(--vscode-editor-font-size, 13px);
@@ -393,11 +416,11 @@ body {
 }
 
 .vrow.row.split {
-  grid-template-columns: var(--gut) var(--codew) var(--gut) var(--codew);
+  grid-template-columns: var(--gut) var(--pane) var(--gut) var(--pane);
 }
 
 .vrow.row.inline {
-  grid-template-columns: var(--gut) var(--gut) 22px var(--codew);
+  grid-template-columns: var(--gut) var(--gut) 22px var(--pane);
 }
 
 .vrow.fold {
@@ -435,15 +458,25 @@ body {
 }
 
 .code {
-  padding: 0 12px 0 8px;
-  white-space: pre;
   overflow: hidden;
 }
 
-.code.probe {
+.code-inner {
+  width: var(--codew);
+  height: 100%;
+  padding: 0 12px 0 8px;
+  white-space: pre;
+  transform: translateX(var(--sx, 0px));
+  will-change: transform;
+  font: inherit;
+}
+
+.code-inner.probe {
   position: absolute;
   visibility: hidden;
   white-space: pre;
+  font-family: var(--vscode-editor-font-family, 'Consolas', monospace);
+  font-size: var(--vscode-editor-font-size, 13px);
 }
 
 /* line backgrounds */

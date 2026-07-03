@@ -145,6 +145,7 @@ const headerEl = el('header', 'header');
 const bodyEl = el('div', 'body');
 const sidebarEl = el('aside', 'sidebar');
 const contentEl = el('div', 'content');
+const viewRowEl = el('div', 'view-row');
 const scrollerEl = el('div', 'scroller');
 const spacerEl = el('div', 'spacer');
 const rowsLayerEl = el('div', 'rows-layer');
@@ -152,6 +153,8 @@ const noteEl = el('div', 'note');
 const minimapEl = el('div', 'minimap');
 const minimapCanvas = document.createElement('canvas');
 const minimapView = el('div', 'minimap-view');
+const hbarEl = el('div', 'hbar');
+const hbarSpacerEl = el('div', 'hbar-spacer');
 const drawerEl = el('aside', 'ai-drawer');
 
 spacerEl.appendChild(rowsLayerEl);
@@ -159,8 +162,11 @@ scrollerEl.appendChild(spacerEl);
 scrollerEl.appendChild(noteEl);
 minimapEl.appendChild(minimapCanvas);
 minimapEl.appendChild(minimapView);
-contentEl.appendChild(scrollerEl);
-contentEl.appendChild(minimapEl);
+hbarEl.appendChild(hbarSpacerEl);
+viewRowEl.appendChild(scrollerEl);
+viewRowEl.appendChild(minimapEl);
+contentEl.appendChild(viewRowEl);
+contentEl.appendChild(hbarEl);
 bodyEl.appendChild(sidebarEl);
 bodyEl.appendChild(contentEl);
 bodyEl.appendChild(drawerEl);
@@ -178,7 +184,25 @@ scrollerEl.addEventListener('scroll', () => {
     });
   }
 });
+
+// shared horizontal scroll: the hbar drives a GPU transform on code cells
+hbarEl.addEventListener('scroll', () => {
+  contentEl.style.setProperty('--sx', `${-hbarEl.scrollLeft}px`);
+});
+scrollerEl.addEventListener(
+  'wheel',
+  (e) => {
+    const dx = e.deltaX !== 0 ? e.deltaX : e.shiftKey ? e.deltaY : 0;
+    if (dx !== 0) {
+      hbarEl.scrollLeft += dx;
+      e.preventDefault();
+    }
+  },
+  { passive: false }
+);
+
 new ResizeObserver(() => {
+  applyLayout();
   updateWindow();
   drawMinimap();
 }).observe(scrollerEl);
@@ -517,9 +541,13 @@ function rebuildDisplay(preserveScroll: boolean): void {
   }
 
   computeMetrics(model.rows);
+  applyLayout();
   spacerEl.style.height = `${displayList.length * ROW_H}px`;
-  spacerEl.style.width = `${totalWidth()}px`;
   scrollerEl.scrollTop = scrollTop;
+  if (!preserveScroll) {
+    hbarEl.scrollLeft = 0;
+    contentEl.style.setProperty('--sx', '0px');
+  }
   updateWindow();
   drawMinimap();
   updateMinimapView();
@@ -538,7 +566,7 @@ function expandedLen(text: string): number {
 }
 
 function computeMetrics(rows: DiffRow[]): void {
-  const probe = el('div', 'code probe');
+  const probe = el('div', 'code-inner probe');
   probe.textContent = 'M';
   scrollerEl.appendChild(probe);
   const font = getComputedStyle(probe).font;
@@ -565,17 +593,34 @@ function computeMetrics(rows: DiffRow[]): void {
   );
   gutterW = Math.max(44, 20 + String(maxLine).length * charW);
   codeW = Math.ceil(maxChars * charW) + 28;
-
-  contentEl.style.setProperty('--gut', `${gutterW}px`);
-  contentEl.style.setProperty('--codew', `${codeW}px`);
-  contentEl.style.setProperty('--row-h', `${ROW_H}px`);
 }
 
-function totalWidth(): number {
-  const min = scrollerEl.clientWidth;
-  const width =
-    state.mode === 'split' ? gutterW * 2 + codeW * 2 : gutterW * 2 + 22 + codeW;
-  return Math.max(min, width);
+/**
+ * Panes always fit the viewport; long lines pan horizontally via a shared
+ * transform driven by the bottom scrollbar (both sides stay in sync).
+ */
+function applyLayout(): void {
+  const w = scrollerEl.clientWidth;
+  const paneW =
+    state.mode === 'split'
+      ? Math.max(120, Math.floor((w - gutterW * 2) / 2))
+      : Math.max(120, w - gutterW * 2 - 22);
+  const innerW = Math.max(codeW, paneW);
+
+  contentEl.style.setProperty('--gut', `${gutterW}px`);
+  contentEl.style.setProperty('--pane', `${paneW}px`);
+  contentEl.style.setProperty('--codew', `${innerW}px`);
+  contentEl.style.setProperty('--row-h', `${ROW_H}px`);
+
+  const overflow = innerW > paneW;
+  hbarEl.classList.toggle('hidden', !overflow);
+  hbarEl.style.width = `${paneW}px`;
+  hbarEl.style.marginLeft = `${state.mode === 'split' ? gutterW : gutterW * 2 + 22}px`;
+  hbarSpacerEl.style.width = `${innerW}px`;
+  if (!overflow) {
+    hbarEl.scrollLeft = 0;
+    contentEl.style.setProperty('--sx', '0px');
+  }
 }
 
 // ---------------------------------------------------------- virtual window
@@ -593,8 +638,6 @@ function updateWindow(): void {
 
   rowsLayerEl.textContent = '';
   const frag = document.createDocumentFragment();
-  const width = totalWidth();
-  spacerEl.style.width = `${width}px`;
   for (let i = start; i < end; i++) {
     let rowEl = rowHtmlCache.get(i);
     if (!rowEl) {
@@ -606,7 +649,6 @@ function updateWindow(): void {
       }
     }
     rowEl.style.top = `${i * ROW_H}px`;
-    rowEl.style.width = `${width}px`;
     const flashing =
       state.flash && i >= state.flash.from && i < state.flash.to;
     rowEl.classList.toggle('flash', !!flashing);
@@ -685,8 +727,10 @@ function codeCell(
   if (text === undefined) {
     return cell;
   }
+  const inner = el('div', 'code-inner');
+  cell.appendChild(inner);
   if (text === '') {
-    cell.appendChild(document.createTextNode(' '));
+    inner.appendChild(document.createTextNode(' '));
     return cell;
   }
   let html: string;
@@ -698,10 +742,10 @@ function codeCell(
   } catch {
     html = escapeHtml(text);
   }
-  cell.innerHTML = html;
+  inner.innerHTML = html;
   if (ranges && ranges.length > 0) {
     for (const [start, end] of ranges) {
-      wrapRange(cell, start, end, hlClass);
+      wrapRange(inner, start, end, hlClass);
     }
   }
   return cell;
