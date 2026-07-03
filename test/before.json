@@ -1,0 +1,32 @@
+{
+  "name": "diffium-demo",
+  "version": "1.0.0",
+  "description": "Sample config for testing Diffium",
+  "private": true,
+  "author": {
+    "name": "Sitharaj",
+    "email": "sitharaj@example.com"
+  },
+  "settings": {
+    "theme": "dark",
+    "fontSize": 13,
+    "autoSave": false,
+    "tabSize": 2
+  },
+  "dependencies": {
+    "express": "^4.18.0",
+    "lodash": "^4.17.21",
+    "react": "^18.2.0"
+  },
+  "features": [
+    "diffView",
+    "syntaxHighlight",
+    "folding"
+  ],
+  "maxUsers": 100,
+  "server": {
+    "host": "localhost",
+    "port": 3000,
+    "ssl": false
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "name": "diffium",
+  "displayName": "Diffium — Modern Diff Viewer",
+  "description": "A beautiful, modern two-file diff viewer with GitHub Copilot integration: AI explanations and reviews of your changes.",
+  "version": "0.1.0",
+  "publisher": "sitharaj",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sitharaj88/diffium.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sitharaj88/diffium/issues"
+  },
+  "homepage": "https://github.com/sitharaj88/diffium#readme",
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Other",
+    "AI",
+    "Visualization"
+  ],
+  "keywords": [
+    "diff",
+    "compare",
+    "compare files",
+    "copilot",
+    "ai"
+  ],
+  "icon": "media/icon.png",
+  "galleryBanner": {
+    "color": "#1e1b4b",
+    "theme": "dark"
+  },
+  "main": "./dist/extension.js",
+  "activationEvents": [],
+  "contributes": {
+    "commands": [
+      {
+        "command": "diffium.compareFiles",
+        "title": "Compare Two Files…",
+        "category": "Diffium",
+        "icon": "$(diff)"
+      },
+      {
+        "command": "diffium.compareFolders",
+        "title": "Compare Two Folders…",
+        "category": "Diffium",
+        "icon": "$(file-directory)"
+      },
+      {
+        "command": "diffium.compareSelected",
+        "title": "Compare Selected (Diffium)",
+        "category": "Diffium"
+      },
+      {
+        "command": "diffium.compareWithClipboard",
+        "title": "Compare Active File with Clipboard",
+        "category": "Diffium",
+        "icon": "$(clippy)"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "diffium.compareSelected",
+          "when": "false"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "diffium.compareSelected",
+          "when": "listDoubleSelection",
+          "group": "3_compare@1"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Diffium",
+      "properties": {
+        "diffium.contextLines": {
+          "type": "number",
+          "default": 3,
+          "minimum": 0,
+          "description": "Context lines kept visible around changes when folding unchanged regions."
+        },
+        "diffium.ai.modelFamily": {
+          "type": "string",
+          "default": "",
+          "description": "Preferred Copilot model family (e.g. 'gpt-4o', 'claude-sonnet-4.5'). Leave empty for automatic."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
+    "typecheck": "tsc --noEmit",
+    "pretest": "esbuild src/diffEngine.ts --bundle --platform=node --format=cjs --outfile=out-test/diffEngine.cjs --log-level=silent",
+    "test": "node --test tests/diffEngine.test.cjs",
+    "vscode:prepublish": "node esbuild.mjs --production",
+    "package": "vsce package"
+  },
+  "dependencies": {
+    "diff": "^5.2.0",
+    "highlight.js": "^11.10.0"
+  },
+  "devDependencies": {
+    "@types/diff": "^5.2.1",
+    "@types/node": "^20.14.0",
+    "@types/vscode": "^1.95.0",
+    "esbuild": "^0.24.0",
+    "sharp": "^0.35.3",
+    "typescript": "^5.6.0"
+  }
+}

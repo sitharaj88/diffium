@@ -1,0 +1,70 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1e1b4b"/>
+      <stop offset="0.5" stop-color="#4c1d95"/>
+      <stop offset="1" stop-color="#0369a1"/>
+    </linearGradient>
+    <linearGradient id="cardL" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.07"/>
+    </linearGradient>
+    <linearGradient id="cardR" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.10"/>
+    </linearGradient>
+    <linearGradient id="spark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fef3c7"/>
+      <stop offset="1" stop-color="#fbbf24"/>
+    </linearGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- background -->
+  <rect width="256" height="256" rx="56" fill="url(#bg)"/>
+  <!-- subtle inner highlight -->
+  <rect x="2" y="2" width="252" height="252" rx="54" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="2"/>
+
+  <!-- left card (old file) -->
+  <g filter="url(#softShadow)">
+    <rect x="34" y="58" width="86" height="140" rx="16" fill="url(#cardL)" stroke="#ffffff" stroke-opacity="0.28" stroke-width="2.5"/>
+  </g>
+  <!-- deletion lines -->
+  <rect x="48" y="78"  width="58" height="11" rx="5.5" fill="#fb7185"/>
+  <rect x="48" y="99"  width="42" height="11" rx="5.5" fill="#fb7185" opacity="0.85"/>
+  <rect x="48" y="120" width="52" height="11" rx="5.5" fill="#ffffff" opacity="0.38"/>
+  <rect x="48" y="141" width="36" height="11" rx="5.5" fill="#fb7185" opacity="0.7"/>
+  <rect x="48" y="162" width="48" height="11" rx="5.5" fill="#ffffff" opacity="0.30"/>
+
+  <!-- right card (new file) -->
+  <g filter="url(#softShadow)">
+    <rect x="136" y="58" width="86" height="140" rx="16" fill="url(#cardR)" stroke="#ffffff" stroke-opacity="0.4" stroke-width="2.5"/>
+  </g>
+  <!-- addition lines -->
+  <rect x="150" y="78"  width="58" height="11" rx="5.5" fill="#4ade80"/>
+  <rect x="150" y="99"  width="48" height="11" rx="5.5" fill="#ffffff" opacity="0.38"/>
+  <rect x="150" y="120" width="56" height="11" rx="5.5" fill="#4ade80" opacity="0.9"/>
+  <rect x="150" y="141" width="40" height="11" rx="5.5" fill="#4ade80" opacity="0.75"/>
+  <rect x="150" y="162" width="50" height="11" rx="5.5" fill="#ffffff" opacity="0.30"/>
+
+  <!-- connector chevrons between the cards -->
+  <g stroke="#e0f2fe" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.95">
+    <path d="M124 116 l-9 12 9 12"/>
+    <path d="M132 116 l9 12 -9 12"/>
+  </g>
+
+  <!-- AI sparkle -->
+  <g filter="url(#glow)">
+    <path d="M197 26 c3 14 8 19 22 22 c-14 3 -19 8 -22 22 c-3 -14 -8 -19 -22 -22 c14 -3 19 -8 22 -22 z" fill="url(#spark)"/>
+    <path d="M225 62 c1.6 7.5 4.5 10.4 12 12 c-7.5 1.6 -10.4 4.5 -12 12 c-1.6 -7.5 -4.5 -10.4 -12 -12 c7.5 -1.6 10.4 -4.5 12 -12 z" fill="url(#spark)" opacity="0.9"/>
+  </g>
+</svg>

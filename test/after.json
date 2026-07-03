@@ -1,0 +1,35 @@
+{
+  "name": "diffium-demo",
+  "version": "1.1.0",
+  "description": "Sample config for testing Diffium diffing",
+  "private": true,
+  "author": {
+    "name": "Sitharaj",
+    "email": "sitharaj.info@gmail.com"
+  },
+  "settings": {
+    "theme": "dark",
+    "fontSize": 14,
+    "autoSave": true,
+    "tabSize": 2,
+    "wordWrap": true
+  },
+  "dependencies": {
+    "express": "^4.19.0",
+    "lodash": "^4.17.21",
+    "react": "^18.3.0",
+    "zod": "^3.23.0"
+  },
+  "features": [
+    "diffView",
+    "syntaxHighlight",
+    "folding",
+    "aiReview"
+  ],
+  "maxUsers": 250,
+  "server": {
+    "host": "0.0.0.0",
+    "port": 3000,
+    "ssl": true
+  }
+}

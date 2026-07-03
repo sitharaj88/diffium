@@ -1,0 +1,17 @@
+# build outputs
+dist/
+out-test/
+*.vsix
+
+# dependencies
+node_modules/
+
+# logs & OS noise
+npm-debug.log*
+*.log
+.DS_Store
+Thumbs.db
+
+# local tooling & stray files
+.claude/
+*.pem

@@ -1,0 +1,17 @@
+.vscode/**
+.github/**
+src/**
+tests/**
+out-test/**
+node_modules/**
+esbuild.mjs
+tsconfig.json
+render-icon.cjs
+media/icon.svg
+samples/**
+test/**
+.gitignore
+.claude/**
+*.pem
+**/*.map
+*.vsix
